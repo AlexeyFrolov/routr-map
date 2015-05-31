@@ -1,0 +1,38 @@
+{
+  "name": "router-map",
+  "version": "0.0.1",
+  "description": "router-map",
+  "main": "index.js",
+  "scripts": {
+    "test": "BABEL_JEST_STAGE=1 jest",
+    "test:watch": "nodemon -w __tests__ -w ./src -e js,jsx -x npm test"
+  },
+  "author": "",
+  "license": "ISC",
+  "devDependencies": {
+    "babel-jest": "^5.2.0",
+    "jest-cli": "^0.4.5"
+  },
+  "jest": {
+    "scriptPreprocessor": "<rootDir>/node_modules/babel-jest",
+    "testFileExtensions": [
+      "es6",
+      "js"
+    ],
+    "moduleFileExtensions": [
+      "js",
+      "json",
+      "es6"
+    ],
+    "unmockedModulePathPatterns": [
+      "src/router.js",
+      "/node_modules/",
+      "/data/"
+    ],
+    "testPathIgnorePatterns": [
+      "/node_modules/",
+      "/data/"
+    ],
+    "collectCoverage": false
+  }
+}
