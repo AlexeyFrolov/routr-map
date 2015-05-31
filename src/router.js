@@ -11,7 +11,8 @@ class Router {
     }
 
     match (url) {
-        var params = Router.parseUrl(url).path.reduce((result, step) => {
+        let parsedUrl = Router.parseUrl(url);
+        var params = parsedUrl.path.reduce((result, step) => {
             if (result === false) {
                 return false;
             }
@@ -35,6 +36,8 @@ class Router {
         if (params === false) {
             return false;
         }
+        params.params = Object.assign({}, parsedUrl.query, params.params);
+        params.query = parsedUrl.query;
         params.name = params.routePath.filter(step => !Router.isParam(step)).join('.');
         return params;
     }
@@ -50,7 +53,7 @@ class Router {
         url = url.split("://");
         url = url[1] || url[0];
         let [path, query] = url.split("?");
-        path = path.split("/").splice(1);
+        path = path.split("/").splice(1).filter(step => step.trim() !== "");
         query = qs.parse(query);
         return {path, query};
     }
