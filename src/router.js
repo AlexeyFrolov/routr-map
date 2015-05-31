@@ -11,8 +11,8 @@ class Router {
     }
 
     match (url) {
-        let parsedUrl = Router.parseUrl(url);
-        var params = parsedUrl.path.reduce((result, step) => {
+        let {path, query} = Router.parseUrl(url);
+        var params = path.reduce((result, step) => {
             if (result === false) {
                 return false;
             }
@@ -36,8 +36,8 @@ class Router {
         if (params === false) {
             return false;
         }
-        params.params = Object.assign({}, parsedUrl.query, params.params);
-        params.query = parsedUrl.query;
+        params.params = Object.assign({}, query, params.params);
+        params.query = query;
         params.name = params.routePath.filter(step => !Router.isParam(step)).join('.');
         return params;
     }
