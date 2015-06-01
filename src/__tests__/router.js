@@ -19,4 +19,13 @@ describe('Router match', () => {
         expect(router.url(router.match('http://example.com/users')))
             .toBe('http://example.com/users');
     });
+
+    //it('should match and build with domain w/o scheme', () => {
+    //    expect(router.url(router.match('example.com/users/1/comments')))
+    //        .toBe('http://example.com/users/1/comments');
+    //    expect(router.url(router.match('example.com/users/1')))
+    //        .toBe('http://example.com/users/1');
+    //    expect(router.url(router.match('example.com/users')))
+    //        .toBe('http://example.com/users');
+    //});
 });
