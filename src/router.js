@@ -11,14 +11,13 @@ class Router {
     }
 
     match (url) {
-        let {path, query} = Router.parseUrl(url);
-        var params = path.reduce((result, step) => {
+        let {path, query, domain, scheme} = Router.parseUrl(url);
+        let params = path.reduce((result, step) => {
             if (result === false) {
                 return false;
             }
             let { node } = result;
-            let routeStep = node && node[step] && step ||
-                Object.keys(node).find(key => Router.isParam(key));
+            let routeStep = Router.getRouteStep(node, step);
             if (!routeStep) {
                 return false;
             }
@@ -39,23 +38,71 @@ class Router {
         params.params = Object.assign({}, query, params.params);
         params.query = query;
         params.name = params.routePath.filter(step => !Router.isParam(step)).join('.');
+        params.domain = domain;
+        params.scheme = scheme;
         return params;
     }
 
     /**
      * {name, params}
      */
-    url (params) {
-        //return params.name()
+    url ({name, params = {}, query = {}, domain = "", scheme = ""}) {
+        return '/' + this.getFullRoute({name, params}).reduce((url, step) => {
+            if (Router.isParam(step)) {
+                url.push(params[Router.paramName(step)]);
+            } else {
+                url.push(step);
+            }
+            return url;
+        }, []).join('/');
+    }
+
+    getFullRoute({name, params = {}}) {
+        name = typeof name === "string" && name.split(".") || name;
+        result = [];
+        let current = name.shift();
+        let node = this.routes;
+        while (current) {
+            if (node[current]) {
+                result.push(current);
+                node = node[current];
+                current = name.shift();
+            } else {
+                let nodeParam = Router.getNodeParam(node);
+                if (!nodeParam) {
+                    throw new Error("Route with name '" + name.join(".") + "' does not exists");
+                }
+                let paramName = Router.paramName(nodeParam);
+                if (!params[paramName]) {
+                    throw new Error("Parameter '" + paramName + "' should be provided");
+                }
+                name.unshift(current);
+                current = nodeParam;
+            }
+        }
+        return result;
+    }
+
+    static getRouteStep(node, step) {
+        return node && node[step] && step || Router.getNodeParam(node)
     }
 
     static parseUrl(url) {
+        let scheme = "";
         url = url.split("://");
-        url = url[1] || url[0];
+        if (url[1]) {
+            scheme = url[0];
+            url = url[1];
+        } else {
+            url = url[0];
+        }
         let [path, query] = url.split("?");
-        path = path.split("/").splice(1).filter(step => step.trim() !== "");
+        path = path.split("/");
+        let domain = scheme.length && path[0] || "";
+        path = domain.length && path.splice(1) || path;
+        path = path.filter(step => step.trim() !== "");
         query = qs.parse(query);
-        return {path, query};
+        return {path, query, scheme, domain};
     }
 
     static isParam(step) {
@@ -64,6 +111,10 @@ class Router {
 
     static paramName(step) {
         return step.substr(1)
+    }
+
+    static getNodeParam(node) {
+        return Object.keys(node).find(key => Router.isParam(key));
     }
 
 }
