@@ -46,9 +46,8 @@ class Router {
     /**
      * {name, params}
      */
-    url ({name, params = {}, query = {}, domain = "", scheme = ""}) {
-        scheme = scheme || domain && "http";
-        scheme = scheme && scheme + "://" || "";
+    url ({name, params = {}, query = {}, domain = "", scheme = "http"}) {
+        scheme = domain && scheme + "://";
         return scheme + domain + '/' + this.getFullRoute({name, params}).reduce((url, step) => {
             url.push(Router.isParam(step) && params[Router.paramName(step)] || step);
             return url;
