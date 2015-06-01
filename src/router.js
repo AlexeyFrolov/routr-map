@@ -48,11 +48,7 @@ class Router {
      */
     url ({name, params = {}, query = {}, domain = "", scheme = ""}) {
         return '/' + this.getFullRoute({name, params}).reduce((url, step) => {
-            if (Router.isParam(step)) {
-                url.push(params[Router.paramName(step)]);
-            } else {
-                url.push(step);
-            }
+            url.push(Router.isParam(step) && params[Router.paramName(step)] || step);
             return url;
         }, []).join('/');
     }
@@ -66,7 +62,9 @@ class Router {
             if (node[current]) {
                 result.push(current);
                 node = node[current];
-                current = name.shift();
+                let nodeParam = Router.getNodeParam(node);
+                let paramName = Router.paramName(nodeParam);
+                current = name.shift() || params[paramName] && nodeParam;
             } else {
                 let nodeParam = Router.getNodeParam(node);
                 if (!nodeParam) {
@@ -114,7 +112,7 @@ class Router {
     }
 
     static getNodeParam(node) {
-        return Object.keys(node).find(key => Router.isParam(key));
+        return Object.keys(node).find(key => Router.isParam(key)) || "";
     }
 
 }
