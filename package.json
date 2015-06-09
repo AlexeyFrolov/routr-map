@@ -1,5 +1,5 @@
 {
-  "name": "router-map",
+  "name": "routr-map",
   "version": "0.0.1",
   "description": "router-map",
   "main": "index.js",
@@ -25,6 +25,7 @@
       "es6"
     ],
     "unmockedModulePathPatterns": [
+      "lib/router.js",
       "src/router.js",
       "/node_modules/",
       "/data/"

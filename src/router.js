@@ -1,7 +1,5 @@
 import qs from "querystring";
 
-require("babel/polyfill");
-
 class Router {
 
     routes;
@@ -56,7 +54,7 @@ class Router {
 
     getFullRoute({name, params = {}}) {
         name = typeof name === "string" && name.split(".") || name;
-        result = [];
+        let result = [];
         let current = name.shift();
         let node = this.routes;
         while (current) {
