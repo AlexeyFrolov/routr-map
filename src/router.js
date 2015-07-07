@@ -1,5 +1,30 @@
 import qs from "querystring";
 
+const assign = Object.assign || function (target) {
+    if (target === undefined || target === null) {
+        throw new TypeError('Cannot convert first argument to object');
+    }
+
+    var to = Object(target);
+    for (var i = 1; i < arguments.length; i++) {
+        var nextSource = arguments[i];
+        if (nextSource === undefined || nextSource === null) {
+            continue;
+        }
+        nextSource = Object(nextSource);
+
+        var keysArray = Object.keys(Object(nextSource));
+        for (var nextIndex = 0, len = keysArray.length; nextIndex < len; nextIndex++) {
+            var nextKey = keysArray[nextIndex];
+            var desc = Object.getOwnPropertyDescriptor(nextSource, nextKey);
+            if (desc !== undefined && desc.enumerable) {
+                to[nextKey] = nextSource[nextKey];
+            }
+        }
+    }
+    return to;
+};
+
 class Router {
 
     routes;
@@ -33,7 +58,7 @@ class Router {
         if (params === false) {
             return false;
         }
-        params.params = Object.assign({}, query, params.params);
+        params.params = assign({}, query, params.params);
         params.query = query;
         params.name = params.routePath.filter(step => !Router.isParam(step)).join('.');
         params.domain = domain;
@@ -103,7 +128,7 @@ class Router {
     }
 
     static isParam(step) {
-        return step.startsWith(':');
+        return step.substr(0, 1) === ':';
     }
 
     static paramName(step) {
@@ -111,7 +136,7 @@ class Router {
     }
 
     static getNodeParam(node) {
-        return Object.keys(node).find(key => Router.isParam(key)) || "";
+        return Object.keys(node).filter(key => Router.isParam(key))[0] || "";
     }
 
 }
