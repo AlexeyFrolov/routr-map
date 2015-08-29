@@ -12,6 +12,10 @@ describe('Url generation', () => {
         expect(router.url({name: 'users'})).toBe('/users');
     });
 
+    it('should generate url with query', () => {
+        expect(router.url({name: 'users', query: {id: 1}})).toBe('/users?id=1');
+    });
+
     it('should throw an exception if route requires params but no correct params provided', () => {
         expect(() => router.url({name: 'users.comments', params: {idd: 1}}))
             .toThrow(new Error("Parameter 'id' should be provided"));

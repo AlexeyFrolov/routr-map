@@ -74,7 +74,7 @@ class Router {
         return scheme + domain + '/' + this.getFullRoute({name, params}).reduce((url, step) => {
             url.push(Router.isParam(step) && params[Router.paramName(step)] || step);
             return url;
-        }, []).join('/');
+        }, []).join('/') + (qs.stringify(query) ? "?" + qs.stringify(query) : "");
     }
 
     getFullRoute({name, params = {}}) {
