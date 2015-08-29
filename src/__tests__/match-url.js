@@ -17,10 +17,6 @@ describe('Router match', () => {
         expect(router.match('http://example.com/users/1').params).toEqual({id: '1'});
     });
 
-    it('should match query params', () => {
-        expect(router.match('http://example.com/users?id=1').params).toEqual({id: '1'});
-    });
-
     it('should prefer route params over query params', () => {
         expect(router.match('http://example.com/users/1?id=2').params).toEqual({id: '1'});
     });

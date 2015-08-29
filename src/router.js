@@ -58,7 +58,6 @@ class Router {
         if (params === false) {
             return false;
         }
-        params.params = assign({}, query, params.params);
         params.query = query;
         params.name = params.routePath.filter(step => !Router.isParam(step)).join('.');
         params.domain = domain;
