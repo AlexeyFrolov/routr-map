@@ -7,6 +7,10 @@ describe('Router match', () => {
         expect(router.match('http://example.com/users').name).toBe('users');
     });
 
+    it('should match home url', () => {
+        expect(router.match('/').name).toBe('');
+    });
+
     it('should match correct route name even with slashes', () => {
         expect(router.match('http://example.com/users/1/comments/').name).toBe('users.comments');
         expect(router.match('http://example.com/users/').name).toBe('users');
