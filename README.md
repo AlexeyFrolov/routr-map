@@ -8,7 +8,7 @@ The idea is to declare routes as a tree where for each node you can attach addit
 ```javacript
 {
     "users": {
-        _defaults: { // reoutes are just data you can attach any meta, such as default values
+        _defaults: { // Optional. Routes are just data you can attach any meta, such as default values
           handler: (req, res) => {},
         }
         ":id": {
