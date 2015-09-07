@@ -26,6 +26,9 @@ The idea is to declare routes as a tree where for each node you can attach addit
 }
 ```
 
+## Example
+https://gist.github.com/AlexeyFrolov/eebb41610f0d97d282ce
+
 Inspired by https://gist.github.com/AlexeyFrolov/f14ab900df8e10fab831
 
 
